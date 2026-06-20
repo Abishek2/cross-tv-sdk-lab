@@ -148,8 +148,12 @@ app.get('/diagnostics/:sessionId', (req: Request, res: Response) => {
 });
 
 // Expose server instance for supertest testing
-const server = app.listen(PORT, () => {
-  console.log(`Backend API listening on port ${PORT}`);
-});
+const server = process.env.NODE_ENV === 'test'
+  ? app.listen(0, () => {
+      console.log('Backend API listening on random test port');
+    })
+  : app.listen(PORT, () => {
+      console.log(`Backend API listening on port ${PORT}`);
+    });
 
 export { app, server };

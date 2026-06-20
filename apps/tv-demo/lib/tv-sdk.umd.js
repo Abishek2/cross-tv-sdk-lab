@@ -359,7 +359,8 @@
 		    error: 'videoError',
 		    durationchange: 'videoDurationChange',
 		    waiting: 'videoWaiting',
-		    playing: 'videoPlaying'
+		    playing: 'videoPlaying',
+		    loadedmetadata: 'videoLoaded'
 		  };
 
 		  Object.keys(eventsMap).forEach(function(nativeEvent) {

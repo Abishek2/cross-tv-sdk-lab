@@ -1,6 +1,7 @@
 (function() {
   // Configs
   var BACKEND_URL = 'http://localhost:4000';
+  var DEMO_VIDEO_URL = 'https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4';
   var sdk = null;
   var currentActiveScreenId = 'screen-dashboard';
   var previousFocusedElement = null;
@@ -102,7 +103,6 @@
       finalConfig.errorEndpoint = config.errorEndpoint;
       finalConfig.telemetryBatchSize = config.telemetryBatchSize;
       finalConfig.telemetryFlushInterval = config.telemetryFlushInterval;
-      finalConfig.adBreaks = config.adBreaks;
       finalConfig.retryOptions = config.retryOptions;
     } else {
       // Fallback local defaults
@@ -110,11 +110,12 @@
       finalConfig.errorEndpoint = BACKEND_URL + '/errors';
       finalConfig.telemetryBatchSize = 3;
       finalConfig.telemetryFlushInterval = 5000;
-      finalConfig.adBreaks = [
-        { id: 'pre-roll-local', time: 0, duration: 5 },
-        { id: 'mid-roll-local', time: 15, duration: 8 }
-      ];
     }
+
+    // Always use 6-second mid-roll ad break for the demo stream
+    finalConfig.adBreaks = [
+      { id: 'demo-mid-roll', time: 6, duration: 5 }
+    ];
 
     // Instantiate TV SDK using the UMD factory
     sdk = CrossTVSDK.createTVSDK(finalConfig);
@@ -175,16 +176,50 @@
       if (data.key === 'BACK') {
         handleBackNavigation();
       }
+
+      // Enter toggles play/pause when player screen is active
+      if (currentActiveScreenId === 'screen-player' && data.key === 'ENTER') {
+        var activeEl = sdk.focusManager.getActiveElement();
+        if (activeEl && activeEl.id === 'player-btn-back') {
+          // Let default click listener navigate back
+        } else {
+          var playPauseBtn = $('player-btn-play-pause');
+          if (sdk.videoAdapter.video.paused) {
+            sdk.videoAdapter.play();
+            if (playPauseBtn) playPauseBtn.innerText = 'PAUSE';
+          } else {
+            sdk.videoAdapter.pause();
+            if (playPauseBtn) playPauseBtn.innerText = 'PLAY';
+          }
+          if (data.originalEvent) {
+            data.originalEvent.preventDefault();
+          }
+        }
+      }
     });
 
     // Video Playback Events
+    sdk.eventBus.on('videoLoaded', function() {
+      logToConsole('[PLAYER] Video metadata loaded', 'event');
+      sdk.telemetryClient.track('video_loaded', { src: sdk.videoAdapter.video.src });
+    });
+
+    sdk.eventBus.on('videoPlaying', function() {
+      logToConsole('[PLAYER] Playback active (playing)', 'event');
+      if (!videoStartedTracked) {
+        videoStartedTracked = true;
+        sdk.telemetryClient.track('video_started', { time: sdk.videoAdapter.getCurrentTime() });
+      }
+    });
+
     sdk.eventBus.on('videoPlay', function() {
-      logToConsole('[PLAYER] Playback started', 'event');
+      logToConsole('[PLAYER] Playback started (play)', 'event');
       sdk.telemetryClient.track('video_play', { time: sdk.videoAdapter.getCurrentTime() });
     });
 
     sdk.eventBus.on('videoPause', function() {
       logToConsole('[PLAYER] Playback paused', 'event');
+      sdk.telemetryClient.track('video_paused', { time: sdk.videoAdapter.getCurrentTime() });
       sdk.telemetryClient.track('video_pause', { time: sdk.videoAdapter.getCurrentTime() });
     });
 
@@ -196,12 +231,20 @@
 
     sdk.eventBus.on('videoEnded', function() {
       logToConsole('[PLAYER] Main stream video completed', 'event');
+      sdk.telemetryClient.track('video_ended', {});
       sdk.telemetryClient.track('video_complete', {});
+    });
+
+    sdk.eventBus.on('videoError', function(data) {
+      logToConsole('[PLAYER] Video loading/playback error', 'error');
+      sdk.telemetryClient.track('player_error', { error: data.error ? data.error.message : 'Unknown' });
+      showPlayerFallback(true);
     });
 
     // Ad Interruption Events
     sdk.eventBus.on('adBreakStart', function(data) {
       logToConsole('[AD] Ad break started: ' + data.adBreak.id, 'event');
+      sdk.telemetryClient.track('ad_started', { adId: data.adBreak.id });
       sdk.telemetryClient.track('ad_break_start', { adId: data.adBreak.id });
       showAdOverlay(true, data.adBreak);
     });
@@ -213,6 +256,7 @@
 
     sdk.eventBus.on('adBreakEnd', function(data) {
       logToConsole('[AD] Ad break ended: ' + data.adBreak.id + '. Resuming stream.', 'event');
+      sdk.telemetryClient.track('ad_finished', { adId: data.adBreak.id });
       sdk.telemetryClient.track('ad_break_end', { adId: data.adBreak.id });
       showAdOverlay(false);
     });
@@ -423,17 +467,22 @@
   }
 
   // 5. Video Player Handlers
+  var videoStartedTracked = false;
+
+  function showPlayerFallback(show) {
+    var overlay = $('playerFallbackOverlay');
+    if (overlay) {
+      overlay.style.display = show ? 'flex' : 'none';
+    }
+  }
+
   function startPlayback() {
     if (!sdk) return;
     resetMilestones();
+    videoStartedTracked = false;
+    showPlayerFallback(false);
     
-    // Choose appropriate stream from config or defaults
-    var streamUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
-    if (sdk.deviceProfile.platform === 'Tizen') {
-      streamUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4';
-    } else if (sdk.deviceProfile.platform === 'WebOS') {
-      streamUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4';
-    }
+    var streamUrl = DEMO_VIDEO_URL;
     
     logToConsole('[PLAYER] Loading content stream: ' + streamUrl, 'system');
     sdk.videoAdapter.load(streamUrl);
@@ -448,6 +497,7 @@
       sdk.videoAdapter.pause();
       sdk.adBreakManager.reset();
       showAdOverlay(false);
+      showPlayerFallback(false);
     }
   }
 

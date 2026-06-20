@@ -83,4 +83,49 @@ test.describe('TV Navigation E2E Tests', () => {
     await expect(modal).not.toHaveClass(/active/);
   });
 
+  test('should open player screen and handle video playback flow', async ({ page }) => {
+    const playBtn = page.locator('#menu-btn-play');
+    const playerScreen = page.locator('#screen-player');
+    const dashboardScreen = page.locator('#screen-dashboard');
+    const video = page.locator('#tvPlayer');
+    const adOverlay = page.locator('#adOverlay');
+
+    // 1. Initial State: Dashboard Screen Active
+    await expect(dashboardScreen).toHaveClass(/active/);
+    await expect(playerScreen).not.toHaveClass(/active/);
+
+    // 2. Open Player Screen (Play Demo Stream button is focused by default, hit Enter)
+    await expect(playBtn).toHaveClass(/focused/);
+    await page.keyboard.press('Enter');
+
+    // 3. Player Screen Opens
+    await expect(playerScreen).toHaveClass(/active/);
+    await expect(dashboardScreen).not.toHaveClass(/active/);
+
+    // 4. Video Element Exists & Has Expected Source
+    await expect(video).toBeAttached();
+    const expectedSrc = 'https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4';
+    await expect(video).toHaveAttribute('src', expectedSrc);
+
+    // 5. Enter triggers playback/play-pause toggle
+    await page.keyboard.press('Enter');
+
+    // 6. Simulate time update to trigger the ad overlay
+    await page.evaluate(() => {
+      const videoEl = document.getElementById('tvPlayer');
+      if (videoEl) {
+        videoEl.currentTime = 6;
+        videoEl.dispatchEvent(new Event('timeupdate'));
+      }
+    });
+
+    // 7. Verify Ad Overlay appears
+    await expect(adOverlay).toBeVisible();
+
+    // 8. Escape returns back to home screen
+    await page.keyboard.press('Escape');
+    await expect(dashboardScreen).toHaveClass(/active/);
+    await expect(playerScreen).not.toHaveClass(/active/);
+  });
+
 });

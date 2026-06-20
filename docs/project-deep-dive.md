@@ -40,3 +40,15 @@ When a TV is streaming, network bandwidth is prioritized for video playback (HLS
 - **Batching**: The `TelemetryClient` stores events in memory and flushes them in small batches (e.g. 3-5 events) to minimize active TCP connection overhead.
 - **XHR over Fetch**: Standard `XMLHttpRequest` is universally supported, whereas `fetch` requires heavy polyfills on legacy TV runtimes.
 - **Buffer Backpressure**: If the TV loses connection (common during local Wi-Fi drops), the SDK caches events in memory. A strict queue cap (100 events) prevents memory leaks from crashing the application during extended offline play.
+
+---
+
+## 4. Video Playback & Fallback Architecture
+
+To demonstrate realistic Smart TV streaming capabilities, the TV Demo includes a dedicated player screen supporting HTML5 `<video>` playback powered by an external public test stream (`DEMO_VIDEO_URL = "https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"`). 
+
+### Key Engineering Protocols:
+1. **Zero External Dependency Boot**: The application loads, processes spatial navigation, and opens telemetry diagnostics even if the external stream fails or is blocked by local firewall/CORS policies.
+2. **CORS & Network Fallback Handling**: If the external player encounters a media load failure or browser codec limitations, it traps the `videoError` event from the SDK `VideoAdapter` and transitions gracefully to a fallback state ("*External demo stream unavailable. SDK fallback state active.*") without breaking the application logic or crash reporting.
+3. **Simulated Mid-Roll Interruptions**: The demo integrates the custom `AdBreakManager` module to interrupt the playback after 6 seconds of stream play. The ad break visually pauses the main content, shows a countdown overlay, and resumes playback once the ad completes.
+

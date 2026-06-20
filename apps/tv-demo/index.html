@@ -43,7 +43,7 @@
             <div class="menu-items">
               <button class="menu-item focusable" id="menu-btn-play" data-screen="screen-player">
                 <span class="icon">▶</span>
-                <span class="title">Play Main Stream</span>
+                <span class="title">Play Demo Stream</span>
                 <span class="subtitle">Experience video playback & scheduled ads</span>
               </button>
               <button class="menu-item focusable" id="menu-btn-diagnostics" data-screen="screen-diagnostics">
@@ -78,6 +78,15 @@
       <section class="screen" id="screen-player">
         <div class="player-wrapper">
           <video id="tvPlayer" class="video-element"></video>
+
+          <!-- Demo Info Note -->
+          <div class="demo-note" id="demoNote">External public test stream used for demo playback.</div>
+
+          <!-- Player Fallback Message Overlay -->
+          <div class="player-fallback-overlay" id="playerFallbackOverlay">
+            <span class="fallback-icon">⚠</span>
+            <p class="fallback-message">External demo stream unavailable. SDK fallback state active.</p>
+          </div>
           
           <!-- Ad Overlay -->
           <div class="ad-overlay" id="adOverlay">

@@ -67,3 +67,13 @@ Individual workspace test commands:
 - **SDK Unit Tests**: `npm run test:sdk` (runs Mocha assertions via headless mocks)
 - **API Tests**: `npm run test:api` (runs Supertest integration checks)
 - **E2E Tests**: `npm run test:e2e` (runs Playwright browser D-Pad navigation tests)
+
+---
+
+## Demo Video Playback & Fallback Handling
+
+The TV Demo features realistic HTML5 video playback by fetching a safe public test video stream:
+- **Video Source**: Big Buck Bunny (`https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4`)
+- **Spatial Controls**: Pressing `Enter` on the player screen toggles play/pause, `Escape` or `Backspace` returns to the dashboard, and `R` triggers the HbbTV overlay.
+- **Simulated Ad Interruption**: A custom mid-roll ad break is scheduled to run 6 seconds into playback, pausing the content and rendering an overlay for 5 seconds.
+- **Robust Fallback**: If the external video stream fails to load due to network, browser codecs, or CORS issues, the app displays a fallback notification (`External demo stream unavailable. SDK fallback state active.`) while maintaining full navigation, UI stability, and diagnostics capability.
