@@ -1,0 +1,19 @@
+{
+  "name": "@cross-tv-sdk/tv-demo",
+  "version": "1.0.0",
+  "description": "Simulated Smart TV web application demo.",
+  "main": "server.js",
+  "scripts": {
+    "build": "mkdir -p lib && cp ../../packages/tv-sdk/dist/tv-sdk.umd.js* lib/ || true",
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@cross-tv-sdk/core": "^1.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.44.0",
+    "express": "^4.19.2"
+  }
+}

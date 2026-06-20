@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cross-TV SDK Lab Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="tv-body">
+  <div class="tv-viewport">
+    
+    <!-- HEADER BAR -->
+    <header class="tv-header">
+      <div class="brand">
+        <span class="brand-glow"></span>
+        <span class="brand-text">CROSS-TV <span class="accent">SDK LAB</span></span>
+      </div>
+      <div class="api-status">
+        <span class="status-indicator" id="apiStatusDot"></span>
+        <span class="status-text" id="apiStatusText">CONNECTING...</span>
+      </div>
+    </header>
+
+    <!-- HBBTV RED BUTTON OVERLAY -->
+    <div class="hbbtv-banner" id="hbbtvBanner">
+      <span class="red-btn"></span>
+      <span class="hbbtv-text">Press <strong class="key-hint">R</strong> for HbbTV Overlay</span>
+    </div>
+
+    <!-- MAIN APP WRAPPER -->
+    <main class="tv-main-container">
+      
+      <!-- SCREEN 1: DASHBOARD / MENU -->
+      <section class="screen active" id="screen-dashboard">
+        <div class="menu-layout">
+          
+          <!-- LEFT SIDE: MENU LIST -->
+          <div class="menu-sidebar">
+            <h2 class="section-title">TV Navigation Menu</h2>
+            <div class="menu-items">
+              <button class="menu-item focusable" id="menu-btn-play" data-screen="screen-player">
+                <span class="icon">▶</span>
+                <span class="title">Play Main Stream</span>
+                <span class="subtitle">Experience video playback & scheduled ads</span>
+              </button>
+              <button class="menu-item focusable" id="menu-btn-diagnostics" data-screen="screen-diagnostics">
+                <span class="icon">⚙</span>
+                <span class="title">SDK Diagnostics</span>
+                <span class="subtitle">Real-time telemetry and error monitoring</span>
+              </button>
+              <button class="menu-item focusable" id="menu-btn-profile" data-screen="screen-profile">
+                <span class="icon">👤</span>
+                <span class="title">Device Profile</span>
+                <span class="subtitle">Parsed TV user-agent capabilities</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- RIGHT SIDE: HERO CARD -->
+          <div class="hero-card">
+            <div class="hero-content">
+              <div class="tag">Simulated CTV Environment</div>
+              <h1 class="hero-title">Framework-Free TV Performance</h1>
+              <p class="hero-desc">
+                This project showcases a zero-dependency TV SDK written in raw ES5 prototype style. Uses custom spatial navigation, event bus messaging, custom telemetry pipelines, and ad break interruption workflows.
+              </p>
+              <div class="device-badge" id="quick-device-badge">Detecting device...</div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SCREEN 2: VIDEO PLAYER -->
+      <section class="screen" id="screen-player">
+        <div class="player-wrapper">
+          <video id="tvPlayer" class="video-element"></video>
+          
+          <!-- Ad Overlay -->
+          <div class="ad-overlay" id="adOverlay">
+            <div class="ad-tag">SPONSORED ADVERTISEMENT</div>
+            <div class="ad-info">
+              <span class="ad-title">Ad Playing...</span>
+              <span class="ad-timer" id="adTimerText">0s remaining</span>
+            </div>
+            <div class="ad-progress-bar">
+              <div class="ad-progress-fill" id="adProgressFill"></div>
+            </div>
+          </div>
+
+          <!-- Player Controls Bar -->
+          <div class="player-controls" id="playerControls">
+            <div class="progress-bar-container">
+              <div class="progress-bar-bg"></div>
+              <div class="progress-bar-fill" id="playerProgressFill"></div>
+            </div>
+            <div class="controls-layout">
+              <div class="left-controls">
+                <button class="control-btn focusable" id="player-btn-play-pause">PAUSE</button>
+                <button class="control-btn focusable" id="player-btn-back">BACK TO MENU</button>
+              </div>
+              <div class="right-controls">
+                <span class="player-time" id="playerTimeText">00:00 / 00:00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN 3: DIAGNOSTICS & TELEMETRY -->
+      <section class="screen" id="screen-diagnostics">
+        <div class="diagnostics-layout">
+          
+          <div class="diag-column main-diag">
+            <h2 class="section-title">Telemetry & Diagnostics</h2>
+            
+            <div class="diag-dashboard-grid">
+              <div class="diag-stat">
+                <span class="stat-label">Session ID</span>
+                <span class="stat-value text-small" id="diagSessionId">sess_...</span>
+              </div>
+              <div class="diag-stat">
+                <span class="stat-label">Events Queued</span>
+                <span class="stat-value" id="diagEventsCount">0</span>
+              </div>
+              <div class="diag-stat">
+                <span class="stat-label">API Health</span>
+                <span class="stat-value accent-green" id="diagHealthStatus">ONLINE</span>
+              </div>
+            </div>
+
+            <h3 class="subsection-title">Simulator Control Center</h3>
+            <div class="diag-controls">
+              <button class="diag-btn focusable" id="diag-btn-crash">Trigger JS Crash</button>
+              <button class="diag-btn focusable" id="diag-btn-reject">Trigger Promise Reject</button>
+              <button class="diag-btn focusable" id="diag-btn-flush">Force Flush Telemetry</button>
+              <button class="diag-btn focusable" id="diag-btn-back">Return to Menu</button>
+            </div>
+          </div>
+
+          <div class="diag-column feed-column">
+            <h2 class="section-title">Real-time SDK Console</h2>
+            <div class="log-console" id="logConsole">
+              <div class="console-line system-line">[SYSTEM] Diagnostics console initialized.</div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SCREEN 4: DEVICE PROFILE -->
+      <section class="screen" id="screen-profile">
+        <div class="profile-layout">
+          <div class="profile-header">
+            <h2 class="section-title">Parsed Device Profile</h2>
+            <p class="section-subtitle">Evaluated on app load using the user agent string parser.</p>
+          </div>
+
+          <div class="profile-grid">
+            <div class="profile-card">
+              <span class="profile-label">Detected Platform</span>
+              <span class="profile-val" id="profPlatform">PC</span>
+            </div>
+            <div class="profile-card">
+              <span class="profile-label">OS/Browser Version</span>
+              <span class="profile-val" id="profVersion">unknown</span>
+            </div>
+            <div class="profile-card">
+              <span class="profile-label">Vendor / Manufacturer</span>
+              <span class="profile-val" id="profVendor">unknown</span>
+            </div>
+            <div class="profile-card">
+              <span class="profile-label">Hardware Resolution</span>
+              <span class="profile-val" id="profResolution">1920x1080</span>
+            </div>
+          </div>
+
+          <div class="features-list">
+            <h3 class="subsection-title">SDK Feature Capabilities</h3>
+            <div class="features-grid">
+              <div class="feature-item" id="featDrm">
+                <span class="feat-bullet"></span> DRM Capabilities Supported
+              </div>
+              <div class="feature-item" id="featHbb">
+                <span class="feat-bullet"></span> HbbTV Context Native
+              </div>
+              <div class="feature-item" id="featTizen">
+                <span class="feat-bullet"></span> Tizen Platform Native
+              </div>
+              <div class="feature-item" id="featWebos">
+                <span class="feat-bullet"></span> webOS Platform Native
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 30px; text-align: center;">
+            <button class="diag-btn focusable" id="prof-btn-back">Back to Dashboard</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- POPUP OVERLAY: HBBTV MENU -->
+    <div class="modal-overlay" id="hbbtvModal">
+      <div class="hbbtv-modal-card">
+        <div class="modal-header">
+          <span class="red-badge">HbbTV 2.0</span>
+          <h2>Hybrid Broadcast Broadband TV Menu</h2>
+        </div>
+        <p class="modal-desc">Simulated red-button hybrid overlay content. Common on European broadcast systems for on-demand portals.</p>
+        
+        <div class="hbbtv-grid">
+          <button class="hbbtv-grid-btn focusable" id="hbbtv-btn-epg">
+            <span class="color-dot red"></span> Electronic Program Guide
+          </button>
+          <button class="hbbtv-grid-btn focusable" id="hbbtv-btn-vod">
+            <span class="color-dot green"></span> Video on Demand Catalog
+          </button>
+          <button class="hbbtv-grid-btn focusable" id="hbbtv-btn-weather">
+            <span class="color-dot yellow"></span> Local Forecast Info
+          </button>
+          <button class="hbbtv-grid-btn focusable" id="hbbtv-btn-close">
+            <span class="color-dot blue"></span> Exit Overlay
+          </button>
+        </div>
+        
+        <div class="modal-footer">
+          Press <span class="key-hint">Backspace</span> or <span class="key-hint">ESC</span> to exit.
+        </div>
+      </div>
+    </div>
+
+  </div>
+  
+  <!-- LOAD SDK -->
+  <script src="/lib/tv-sdk.umd.js"></script>
+  <!-- LOAD APP LOGIC -->
+  <script src="app.js"></script>
+</body>
+</html>

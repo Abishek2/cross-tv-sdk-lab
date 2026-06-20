@@ -1,0 +1,24 @@
+{
+  "name": "cross-tv-sdk-lab",
+  "version": "1.0.0",
+  "description": "Production-style portfolio project demonstrating Smart TV/HbbTV/CTV simulation, ES5-compatible TV SDK, API telemetry, and Docker setup.",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=packages/tv-sdk && npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:sdk": "npm run test --workspace=packages/tv-sdk",
+    "test:api": "npm run test --workspace=apps/api",
+    "test:e2e": "npm run test:e2e --workspace=apps/tv-demo",
+    "dev:api": "npm run dev --workspace=apps/api",
+    "dev:demo": "npm run dev --workspace=apps/tv-demo",
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:demo\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "typescript": "^5.4.5"
+  }
+}

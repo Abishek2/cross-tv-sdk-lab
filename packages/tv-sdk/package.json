@@ -1,0 +1,16 @@
+{
+  "name": "@cross-tv-sdk/core",
+  "version": "1.0.0",
+  "description": "ES5-compatible Smart TV SDK for HbbTV/CTV environments.",
+  "main": "dist/tv-sdk.umd.js",
+  "module": "src/index.js",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "mocha test/**/*.test.js"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.8",
+    "mocha": "^10.4.0",
+    "rollup": "^4.17.2"
+  }
+}
