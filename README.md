@@ -6,24 +6,24 @@ A production-style portfolio project demonstrating a custom framework-free, ES5-
 
 ## Repository Structure
 
-- [packages/tv-sdk](file:///home/abishek/Desktop/Projects/Cross-TV%20SDK%20Lab/packages/tv-sdk): The core TV SDK. Framewok-free, ES5-compatible prototype JavaScript. Includes EventBus, FocusManager, VideoAdapter, AdBreakManager, TelemetryClient, ErrorReporter, DeviceProfile, and NetworkRetry.
-- [apps/api](file:///home/abishek/Desktop/Projects/Cross-TV%20SDK%20Lab/apps/api): TypeScript backend API built on Node.js and Express. Collects telemetry, aggregates error logs, registers sessions, and serves platform configuration files.
-- [apps/tv-demo](file:///home/abishek/Desktop/Projects/Cross-TV%20SDK%20Lab/apps/tv-demo): Vanilla HTML/CSS/JS client-side web application portal simulating a Smart TV UI. Handles D-Pad navigation, remote key bindings, video players, ad interruptions, and diagnostic consoles.
-- [infra](file:///home/abishek/Desktop/Projects/Cross-TV%20SDK%20Lab/infra): Infrastructure configurations (Nginx config).
-- [docs](file:///home/abishek/Desktop/Projects/Cross-TV%20SDK%20Lab/docs): Detailed documentation files.
+- [packages/tv-sdk](./packages/tv-sdk): The core TV SDK. Framewok-free, ES5-compatible prototype JavaScript. Includes EventBus, FocusManager, VideoAdapter, AdBreakManager, TelemetryClient, ErrorReporter, DeviceProfile, and NetworkRetry.
+- [apps/api](./apps/api): TypeScript backend API built on Node.js and Express. Collects telemetry, aggregates error logs, registers sessions, and serves platform configuration files.
+- [apps/tv-demo](./apps/tv-demo): Vanilla HTML/CSS/JS client-side web application portal simulating a Smart TV UI. Handles D-Pad navigation, remote key bindings, video players, ad interruptions, and diagnostic consoles.
+- [infra](./infra): Infrastructure configurations (Nginx config).
+- [docs](./docs): Detailed documentation files.
 
 ---
 
 ## Technical Documentation Links
 
 For a deeper look into the codebase, engineering constraints, and setup details, please review:
-- [System Architecture & Components Design](file:///home/abishek/Desktop/Projects/Cross-TV%20SDK%20Lab/docs/architecture.md)
-- [Testing & Quality Assurance Strategy](file:///home/abishek/Desktop/Projects/Cross-TV%20SDK%20Lab/docs/testing-strategy.md)
-- [Deployment, Docker & Proxy Configuration](file:///home/abishek/Desktop/Projects/Cross-TV%20SDK%20Lab/docs/deployment.md)
-- [CTV/Smart TV Engineering Constraints Deep Dive](file:///home/abishek/Desktop/Projects/Cross-TV%20SDK%20Lab/docs/project-deep-dive.md)
-- [AI-Assisted Development & Debugging Summary](file:///home/abishek/Desktop/Projects/Cross-TV%20SDK%20Lab/docs/ai-assisted-development.md)
-- [Copy-Paste Job Application Submission Answer](file:///home/abishek/Desktop/Projects/Cross-TV%20SDK%20Lab/docs/application-answer.md)
-- [Architectural Trade-offs & Review Notes](file:///home/abishek/Desktop/Projects/Cross-TV%20SDK%20Lab/docs/review-notes.md)
+- [System Architecture & Components Design](./docs/architecture.md)
+- [Testing & Quality Assurance Strategy](./docs/testing-strategy.md)
+- [Deployment, Docker & Proxy Configuration](./docs/deployment.md)
+- [CTV/Smart TV Engineering Constraints Deep Dive](./docs/project-deep-dive.md)
+- [AI-Assisted Development & Debugging Summary](./docs/ai-assisted-development.md)
+- [Copy-Paste Job Application Submission Answer](./docs/application-answer.md)
+- [Architectural Trade-offs & Review Notes](./docs/review-notes.md)
 
 ---
 
